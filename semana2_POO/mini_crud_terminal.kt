@@ -1,11 +1,14 @@
 data class Produto(val id: Int, var nome: String, var preco: Double)
 
-val produtos = mutableListOf<Produto>()
-var proximoId = 1
+private val produtos = mutableListOf<Produto>()
+private var proximoId = 1
+
+fun String.capitalizeWords(): String =
+    this.lowercase().split(" ").joinToString(" ") {it.replaceFirstChar {c -> c.uppercase()}}
 
 fun criarProduto() {
     print("Nome do produto: ")
-    val nome = readLine() ?: ""
+    val nome = readLine()?.capitalizeWords()?: ""
     print("Preço: ")
     val preco = readLine()?.toDoubleOrNull() ?: 0.0
 
@@ -54,6 +57,21 @@ fun removerProduto() {
     else println("Produto não encontrado.\n")
 }
 
+fun buscarProdutoPorNome() {
+    print("Digite parte do nome: ")
+    val busca = readLine()?.lowercase() ?: ""
+
+    val encontrados = produtos.filter {it.nome.lowercase().contains(busca)}
+
+    if (encontrados.isEmpty()) {
+        println("Nenhum produto encotnrado. \n")
+    } else {
+        encontrados.forEach{
+            println("ID: ${it.id} | Nome: ${it.nome} | Preço: R$ ${it.preco}")
+        }
+        println()
+    }
+}
 fun main() {
     while (true) {
         println("=== MENU ===")
@@ -61,6 +79,7 @@ fun main() {
         println("2. Listar produtos")
         println("3. Editar produto")
         println("4. Remover produto")
+        println("5. Buscar produto por nome")
         println("0. Sair")
         print("Escolha: ")
 
@@ -69,6 +88,7 @@ fun main() {
             "2" -> listarProdutos()
             "3" -> editarProduto()
             "4" -> removerProduto()
+            "5" -> buscarProdutoPorNome()
             "0" -> {
                 println("Saindo...")
                 break
